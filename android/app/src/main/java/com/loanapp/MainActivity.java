@@ -1,10 +1,10 @@
 package com.loanapp;
 
+import android.os.Bundle;
 import com.facebook.react.ReactActivity;
+import org.devio.rn.splashscreen.SplashScreen; // here
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
-import android.os.Bundle;
-
 public class MainActivity extends ReactActivity {
 
   /**
@@ -46,9 +46,12 @@ public class MainActivity extends ReactActivity {
       return BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
     }
 
-    @Override
+    
+  }
+
+  @Override
     protected void onCreate(Bundle savedInstanceState) {
+      SplashScreen.show(this);  // here
       super.onCreate(null);
     }
-  }
 }
