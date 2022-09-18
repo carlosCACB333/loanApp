@@ -4,44 +4,41 @@ import {Dashboard} from '../screens/home';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {LoanStack} from './LoanStack';
 import {ProfileStack} from './ProfileStack';
+import {DashboardStack} from './DashboardStack';
 
 export type homeBottomTabParams = {
-  Dashboard: undefined;
-  Profile: undefined;
-  LoanHome: undefined;
-  Payment: undefined;
+  DashboardStack: undefined;
+  ProfileStack: undefined;
+  LoanStack: undefined;
 };
 
 const Tab = createBottomTabNavigator<homeBottomTabParams>();
 
-export const Home = () => {
+export const HomeTab = () => {
   return (
     <Tab.Navigator
-      initialRouteName="LoanHome"
+      initialRouteName="LoanStack"
       screenOptions={{
         headerShown: false,
-        headerStyle: {
-          backgroundColor: 'transparent',
-        },
-        headerTitleStyle: {
-          fontSize: 20,
+        tabBarStyle: {
+          paddingBottom: 4,
         },
       }}>
       <Tab.Screen
-        name="Dashboard"
-        component={Dashboard}
+        name="DashboardStack"
+        component={DashboardStack}
         options={{
-          headerShown: true,
-          headerTitle: 'Mis estadísticas',
+          tabBarLabel: 'Estadísticas',
           tabBarIcon: ({color}) => (
             <Ionicons name="stats-chart-outline" color={color} size={18} />
           ),
         }}
       />
       <Tab.Screen
-        name="LoanHome"
+        name="LoanStack"
         component={LoanStack}
         options={{
+          tabBarLabel: 'Préstamos',
           tabBarIcon: ({color}) => (
             <Ionicons name="wallet-outline" color={color} size={18} />
           ),
@@ -49,9 +46,10 @@ export const Home = () => {
       />
 
       <Tab.Screen
-        name="Profile"
+        name="ProfileStack"
         component={ProfileStack}
         options={{
+          tabBarLabel: 'Perfil',
           tabBarIcon: ({color}) => (
             <Ionicons name="person-outline" color={color} size={18} />
           ),

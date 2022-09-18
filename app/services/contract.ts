@@ -6,6 +6,10 @@ import {IContract, IOperation} from '../../interfaces';
 
 export const contractApi = createApi({
   reducerPath: 'authApi',
+  refetchOnFocus: true, //cuando esta en focus
+  refetchOnReconnect: true, //cuando se reconecta
+  refetchOnMountOrArgChange: true, //cuando se monta o cambia el argumento
+
   baseQuery: fetchBaseQuery({
     baseUrl: consts.apiUrl + '/contract',
     prepareHeaders: async headers => {

@@ -19,10 +19,19 @@ export const globals = StyleSheet.create({
     fontWeight: 'bold',
     // marginVertical: 8,
   },
+  bold: {
+    fontWeight: 'bold',
+  },
+  btn: {
+    borderRadius: 8,
+  },
   subTitle: {
     fontSize: 16,
     fontWeight: 'bold',
     // marginVertical: 4,
+  },
+  select: {
+    borderRadius: 8,
   },
 
   flex: {
@@ -60,8 +69,8 @@ export const globals = StyleSheet.create({
   row: {
     flexDirection: 'row',
   },
-  flex4: {
-    flex: 4,
+  flex2: {
+    flex: 2,
   },
   scroll: {
     overflow: 'scroll',

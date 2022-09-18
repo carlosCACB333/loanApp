@@ -15,24 +15,17 @@ import {Picker} from '@react-native-picker/picker';
 import {Modal} from '../../layouts';
 import {IContract, IUser} from '../../interfaces';
 import {AuthContext} from '../../context/AuthContext';
-import {ax} from '../../utils/ax';
+
 import {useAppDispatch} from '../../app/hooks';
 import {addContract} from '../../app/loanSlice';
-import {useAddContractMutation} from '../../app/services';
+import {useAddContractMutation, useGetUserQuery} from '../../app/services';
 interface Props {}
 export const AddContract = ({}: Props) => {
   const theme = useTheme();
   const {user} = React.useContext(AuthContext);
-  const [users, setUsers] = React.useState<IUser[]>([]);
+  const {data: users} = useGetUserQuery();
   const dispatch = useAppDispatch();
   const [addContractStart, {isLoading}] = useAddContractMutation();
-  React.useEffect(() => {
-    ax.get<IUser[]>('/user')
-      .then(res => {
-        setUsers(res.data.filter(u => u._id !== user?._id));
-      })
-      .catch(console.log);
-  }, [user?._id]);
 
   const {
     control,
@@ -45,8 +38,9 @@ export const AddContract = ({}: Props) => {
   });
 
   const selectStyle = {
-    borderColor: errors.borrower ? theme.colors.tertiary : theme.colors.outline,
+    borderColor: errors.borrower ? theme.colors.error : theme.colors.outline,
     borderWidth: 1,
+    borderRadius: 8,
   };
 
   const onSubmit = async (d: IContract) => {
@@ -80,12 +74,15 @@ export const AddContract = ({}: Props) => {
     <Modal
       footer={onClose => (
         <>
-          <Button onPress={onClose}>Cancelar</Button>
+          <Button style={globals.btn} onPress={onClose}>
+            Cancelar
+          </Button>
           <Button
             onPress={handleSubmit(async data => {
               const ok = await onSubmit(data);
               ok && onClose();
             })}
+            style={globals.btn}
             mode="contained"
             disabled={!isValid || isLoading}>
             Añadir
@@ -117,7 +114,7 @@ export const AddContract = ({}: Props) => {
         )}
       />
       <HelperText type="error">{errors?.name?.message}</HelperText>
-      <Br />
+
       <Controller
         control={control}
         name="borrower"
@@ -129,25 +126,26 @@ export const AddContract = ({}: Props) => {
             <Picker
               selectedValue={value}
               onValueChange={onChange}
+              // mode="dropdown"
               style={{
-                color: errors.borrower
-                  ? theme.colors.tertiary
-                  : theme.colors.text,
+                color: errors.borrower ? theme.colors.error : theme.colors.text,
               }}>
               <Picker.Item label="Seleccione un usuario..." value="" />
-              {users.map(u => (
-                <Picker.Item
-                  key={u._id}
-                  label={u.firstName + ' ' + u.lastName}
-                  value={u._id}
-                />
-              ))}
+              {users?.map(u =>
+                u._id === user?._id ? null : (
+                  <Picker.Item
+                    key={u._id}
+                    label={u.firstName + ' ' + u.lastName}
+                    value={u._id}
+                  />
+                ),
+              )}
             </Picker>
           </View>
         )}
       />
       <HelperText type="error">{errors?.borrower?.message}</HelperText>
-      <Br />
+
       <Controller
         control={control}
         name="operations.0.amount"
@@ -173,7 +171,7 @@ export const AddContract = ({}: Props) => {
       <HelperText type="error">
         {errors?.operations?.[0]?.amount?.message}
       </HelperText>
-      <Br />
+
       <Controller
         control={control}
         name="operations.0.description"
@@ -188,6 +186,7 @@ export const AddContract = ({}: Props) => {
             mode="outlined"
             onChangeText={onChange}
             error={!!errors.operations?.[0]?.description}
+            multiline
           />
         )}
       />

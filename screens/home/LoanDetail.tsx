@@ -10,14 +10,14 @@ import {
   TextInput,
   useTheme,
 } from 'react-native-paper';
-import {ScrollView, View, Alert} from 'react-native';
+import {View, Alert, ScrollView} from 'react-native';
 import {Br} from '../../components';
 
 import {AddOperation} from '../../components/Loan';
 
 import {CardContract} from '../../components/Loan/';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {Modal} from '../../layouts';
+import {HomeLayout, Modal} from '../../layouts';
 import {globals} from '../../styles';
 import {
   useDeleteContractMutation,
@@ -128,111 +128,114 @@ export const LoanDetail = ({route, navigation}: LoanScreenProps<'Detail'>) => {
 
   return (
     <>
-      <Br />
-      <CardContract contract={contract} isLender={isLender} />
-
-      <Br />
-      {isLender && (
-        <View style={{...globals.row, ...globals.sbw}}>
-          <Modal
-            button={onOpen => (
-              <Button onPress={onOpen}>
-                <Text style={{color: theme.colors.primary}}>
-                  Editar préstamo
-                </Text>
-              </Button>
-            )}
-            footer={onClose => (
-              <>
-                <Button onPress={onClose}>Cancelar</Button>
-                <Button
-                  onPress={async () => {
-                    const res = await handleEditName();
-                    if (res) {
-                      onClose();
-                    }
-                  }}
-                  mode="contained"
-                  disabled={isLo4}>
-                  Editar
-                </Button>
-              </>
-            )}>
-            <Text style={globals.subTitle}>Editar préstamo</Text>
-            <Br />
-            <TextInput
-              value={editFiel.name}
-              label="Nombre del préstamo"
-              mode="outlined"
-              onChangeText={val => setEditFiel({...editFiel, name: val})}
-              error={!!editFiel.error}
-            />
-            <HelperText type="error">{editFiel.error}</HelperText>
-          </Modal>
-          <Modal
-            button={onOpen => (
-              <Button onPress={onOpen}>
-                <Text style={{color: theme.colors.error}}>
-                  Eliminar préstamo
-                </Text>
-              </Button>
-            )}
-            footer={onClose => (
-              <>
-                <Button onPress={onClose}>Cancelar</Button>
-                <Button
-                  onPress={handleDelete}
-                  mode="contained"
-                  disabled={isLoading}>
-                  Eliminar
-                </Button>
-              </>
-            )}>
-            <Text style={globals.subTitle}>
-              ¿ Está seguro que desea eliminar este préstamo ?
-            </Text>
-            <Text>Esta acción no se puede deshacer</Text>
-          </Modal>
-          <Modal
-            button={onOpen => (
-              <Button
-                onPress={onOpen}
-                disabled={contract.status === 'inactive'}>
-                <Text style={{color: theme.colors.tertiary}}>
-                  Cerrar préstamo
-                </Text>
-              </Button>
-            )}
-            footer={onClose => (
-              <>
-                <Button onPress={onClose}>Cancelar</Button>
-                <Button
-                  onPress={async () => {
-                    const res = await handleClose();
-                    if (res) {
-                      onClose();
-                    }
-                  }}
-                  mode="contained"
-                  disabled={isLo2}>
-                  Cerrar
-                </Button>
-              </>
-            )}>
-            <Text style={globals.subTitle}>
-              ¿ Está seguro que desea cerrar el préstamo ?
-            </Text>
-            <Text>
-              Al cerrar el préstamo no se podrá realizar más operaciones.
-            </Text>
-          </Modal>
-        </View>
-      )}
-      <Br />
       <ScrollView>
+        <Br />
+        <CardContract contract={contract} isLender={isLender} />
+
+        <Br />
+        {isLender && (
+          <View style={{...globals.row, ...globals.sbw}}>
+            <Modal
+              button={onOpen => (
+                <Button onPress={onOpen}>
+                  <Text style={{color: theme.colors.primary}}>
+                    Editar préstamo
+                  </Text>
+                </Button>
+              )}
+              footer={onClose => (
+                <>
+                  <Button onPress={onClose}>Cancelar</Button>
+                  <Button
+                    onPress={async () => {
+                      const res = await handleEditName();
+                      if (res) {
+                        onClose();
+                      }
+                    }}
+                    mode="contained"
+                    style={globals.btn}
+                    disabled={isLo4}>
+                    Editar
+                  </Button>
+                </>
+              )}>
+              <Text style={globals.subTitle}>Editar préstamo</Text>
+              <Br />
+              <TextInput
+                value={editFiel.name}
+                label="Nombre del préstamo"
+                mode="outlined"
+                onChangeText={val => setEditFiel({...editFiel, name: val})}
+                error={!!editFiel.error}
+              />
+              <HelperText type="error">{editFiel.error}</HelperText>
+            </Modal>
+            <Modal
+              button={onOpen => (
+                <Button onPress={onOpen}>
+                  <Text style={{color: theme.colors.error}}>
+                    Eliminar préstamo
+                  </Text>
+                </Button>
+              )}
+              footer={onClose => (
+                <>
+                  <Button onPress={onClose}>Cancelar</Button>
+                  <Button
+                    onPress={handleDelete}
+                    mode="contained"
+                    style={globals.btn}
+                    disabled={isLoading}>
+                    Eliminar
+                  </Button>
+                </>
+              )}>
+              <Text style={globals.subTitle}>
+                ¿ Está seguro que desea eliminar este préstamo ?
+              </Text>
+              <Text>Esta acción no se puede deshacer</Text>
+            </Modal>
+            <Modal
+              button={onOpen => (
+                <Button
+                  onPress={onOpen}
+                  disabled={contract.status === 'inactive'}>
+                  <Text style={{color: theme.colors.tertiary}}>
+                    Cerrar préstamo
+                  </Text>
+                </Button>
+              )}
+              footer={onClose => (
+                <>
+                  <Button onPress={onClose}>Cancelar</Button>
+                  <Button
+                    onPress={async () => {
+                      const res = await handleClose();
+                      if (res) {
+                        onClose();
+                      }
+                    }}
+                    mode="contained"
+                    style={globals.btn}
+                    disabled={isLo2}>
+                    Cerrar
+                  </Button>
+                </>
+              )}>
+              <Text style={globals.subTitle}>
+                ¿ Está seguro que desea cerrar el préstamo ?
+              </Text>
+              <Text>
+                Al cerrar el préstamo no se podrá realizar más operaciones.
+              </Text>
+            </Modal>
+          </View>
+        )}
+        <Br />
         <DataTable>
           <DataTable.Header>
-            <DataTable.Title style={globals.flex4}>Fecha</DataTable.Title>
+            <DataTable.Title style={globals.flex2}>Fecha</DataTable.Title>
             <DataTable.Title numeric>Monto</DataTable.Title>
             <DataTable.Title numeric>Accion</DataTable.Title>
             {contract.status === 'active' && isLender && (
@@ -242,7 +245,7 @@ export const LoanDetail = ({route, navigation}: LoanScreenProps<'Detail'>) => {
 
           {contract.operations.map(item => (
             <DataTable.Row key={item._id} style={{}}>
-              <DataTable.Cell style={globals.flex4}>
+              <DataTable.Cell style={globals.flex2}>
                 <Menu
                   visible={contractSelect?._id === item._id}
                   style={{
@@ -278,16 +281,19 @@ export const LoanDetail = ({route, navigation}: LoanScreenProps<'Detail'>) => {
                   <View>
                     <Modal
                       button={onOpen => (
-                        <Button icon="close" onPress={onOpen} style={{}}>
+                        <Button icon="close" onPress={onOpen}>
                           {''}
                         </Button>
                       )}
                       footer={onClose => (
                         <>
-                          <Button onPress={onClose}>Cancelar</Button>
+                          <Button onPress={onClose} style={globals.btn}>
+                            Cancelar
+                          </Button>
                           <Button
                             onPress={() => handleDeleteOption(item._id)}
                             mode="contained"
+                            style={globals.btn}
                             disabled={isLo3}>
                             Eliminar
                           </Button>
@@ -306,6 +312,7 @@ export const LoanDetail = ({route, navigation}: LoanScreenProps<'Detail'>) => {
         </DataTable>
         <Br />
       </ScrollView>
+
       {isLender && contract.status !== 'inactive' && (
         <AddOperation id={contract._id} />
       )}

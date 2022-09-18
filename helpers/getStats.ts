@@ -43,8 +43,8 @@ export const getContractStats = (contracts: IContract[], uid: string) => {
 };
 
 interface Stat {
-  lents: number[];
-  paids: number[];
+  receivables: number[];
+  payables: number[];
 }
 
 export const getLoansAndPaymentsPerMonth = (
@@ -52,8 +52,8 @@ export const getLoansAndPaymentsPerMonth = (
   uid: string,
 ) => {
   const stats: Stat = {
-    lents: new Array(12).fill(0),
-    paids: new Array(12).fill(0),
+    receivables: new Array(12).fill(0),
+    payables: new Array(12).fill(0),
   };
 
   contracts.forEach(contract => {
@@ -61,16 +61,13 @@ export const getLoansAndPaymentsPerMonth = (
 
     contract.operations.forEach(operation => {
       const month = new Date(operation.createdAt).getMonth();
-      console.log(operation.type);
 
       if (isLender) {
-        if (operation.type === 'loan') {
-          stats.lents[month] += operation.amount;
-        }
+        stats.receivables[month] +=
+          operation.type === 'loan' ? operation.amount : -1 * operation.amount;
       } else {
-        if (operation.type === 'payment') {
-          stats.paids[month] += operation.amount;
-        }
+        stats.payables[month] +=
+          operation.type === 'loan' ? operation.amount : -1 * operation.amount;
       }
     });
   });

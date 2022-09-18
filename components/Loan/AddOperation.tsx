@@ -34,8 +34,9 @@ export const AddOperation = ({id}: Props) => {
   });
 
   const selectStyle = {
-    borderColor: errors.type ? theme.colors.tertiary : theme.colors.outline,
+    borderColor: errors.type ? theme.colors.error : theme.colors.outline,
     borderWidth: 1,
+    borderRadius: 8,
   };
 
   const onSubmit = async (op: IOperation) => {
@@ -66,13 +67,16 @@ export const AddOperation = ({id}: Props) => {
     <Modal
       footer={onClose => (
         <>
-          <Button onPress={onClose}>Cancelar</Button>
+          <Button style={globals.btn} onPress={onClose}>
+            Cancelar
+          </Button>
           <Button
             onPress={handleSubmit(async data => {
               const ok = await onSubmit(data);
               ok && onClose();
             })}
             mode="contained"
+            style={globals.btn}
             disabled={!isValid || isLoading}>
             Añadir
           </Button>
@@ -104,7 +108,7 @@ export const AddOperation = ({id}: Props) => {
         )}
       />
       <HelperText type="error">{errors?.amount?.message}</HelperText>
-      <Br />
+
       <Controller
         control={control}
         name="type"
@@ -116,8 +120,14 @@ export const AddOperation = ({id}: Props) => {
             <Picker
               selectedValue={value}
               onValueChange={onChange}
+              itemStyle={{
+                color: theme.colors.text,
+                backgroundColor: theme.colors.background,
+                borderRadius: 8,
+              }}
+              mode="dropdown"
               style={{
-                color: errors.type ? theme.colors.tertiary : theme.colors.text,
+                color: errors.type ? theme.colors.error : theme.colors.text,
               }}>
               <Picker.Item label="Tipo de operación..." value="" />
               <Picker.Item label="Préstamo" value="loan" />
@@ -127,7 +137,7 @@ export const AddOperation = ({id}: Props) => {
         )}
       />
       <HelperText type="error">{errors?.type?.message}</HelperText>
-      <Br />
+
       <Controller
         control={control}
         name="description"
@@ -142,6 +152,7 @@ export const AddOperation = ({id}: Props) => {
             mode="outlined"
             onChangeText={onChange}
             error={!!errors.description}
+            multiline
           />
         )}
       />

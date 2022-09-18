@@ -33,8 +33,9 @@ export const ProfileStack = () => {
           fontSize: 20,
         },
         contentStyle: {
-          paddingHorizontal: 12,
+          paddingHorizontal: 40,
         },
+        navigationBarHidden: true,
       }}>
       <Stack.Screen
         name="ProfileHome"

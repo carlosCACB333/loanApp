@@ -13,7 +13,7 @@ export const PieLoan = () => {
   const {user} = useContext(AuthContext);
   const stats = getContractStats(contracts, user?._id || '');
   const pieStyle: Partial<ViewStyle> = {
-    marginVertical: 16,
+    // marginVertical: 16,
     borderRadius: 20,
     backgroundColor: colors.card,
     alignSelf: 'center',
@@ -22,15 +22,15 @@ export const PieLoan = () => {
   };
   const data = [
     {
-      name: 'Soles por pagar',
-      lenght: stats.debt,
-      color: colors.secondary,
-      legendFontColor: colors.text,
-    },
-    {
       name: 'Soles por cobrar',
       lenght: stats.receivable,
       color: colors.primary,
+      legendFontColor: colors.text,
+    },
+    {
+      name: 'Soles por pagar',
+      lenght: stats.debt,
+      color: colors.secondary,
       legendFontColor: colors.text,
     },
   ];
@@ -44,7 +44,7 @@ export const PieLoan = () => {
         color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
         height: 100,
       }}
-      style={pieStyle}
+      style={{...pieStyle}}
       backgroundColor="transparent"
       absolute
       paddingLeft="0"

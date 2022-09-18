@@ -1,4 +1,4 @@
-import {FlatList} from 'react-native';
+import {FlatList, RefreshControl} from 'react-native';
 import React, {useContext, useEffect} from 'react';
 import {Br} from '../../components';
 import {HomeLayout} from '../../layouts';
@@ -29,17 +29,24 @@ export const Loan = () => {
   if (isLoading) {
     return <Loading />;
   }
+
   return (
     <>
-      <HomeLayout>
+      <>
         <PieLoan />
         <Br />
         <FlatList
           data={contracts}
           keyExtractor={item => item._id}
           showsVerticalScrollIndicator={false}
-          refreshing={isLoading}
-          onRefresh={refetch}
+          refreshControl={
+            <RefreshControl
+              refreshing={isLoading}
+              onRefresh={refetch}
+              colors={[colors.primary]}
+              progressBackgroundColor={colors.background}
+            />
+          }
           ItemSeparatorComponent={() => <Br />}
           renderItem={({item}) => (
             <CardContract
@@ -58,7 +65,7 @@ export const Loan = () => {
             </Text>
           )}
         />
-      </HomeLayout>
+      </>
       <AddContract />
     </>
   );

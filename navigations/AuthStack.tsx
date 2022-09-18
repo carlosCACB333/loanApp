@@ -10,7 +10,7 @@ export type authStackParams = {
 };
 const Stack = createNativeStackNavigator<authStackParams>();
 
-export const Auth = () => {
+export const AuthStack = () => {
   const theme = useTheme();
   return (
     <Stack.Navigator
@@ -20,8 +20,9 @@ export const Auth = () => {
         },
         headerTitle: '',
         contentStyle: {
-          padding: 20,
+          paddingHorizontal: 32,
         },
+        navigationBarHidden: true,
       }}>
       <Stack.Screen
         name="Home"

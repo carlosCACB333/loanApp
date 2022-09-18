@@ -1,4 +1,4 @@
-import {ScrollView, StyleSheet} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import React from 'react';
 import {KeyboardFull} from './KeyboardFull';
 
@@ -11,7 +11,9 @@ export const AuthLayout = ({children}: Props) => {
       contentContainerStyle={{
         ...styles.container,
       }}>
-      <KeyboardFull>{children}</KeyboardFull>
+      <View style={styles.child}>
+        <KeyboardFull>{children}</KeyboardFull>
+      </View>
     </ScrollView>
   );
 };
@@ -20,5 +22,11 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  child: {
+    maxWidth: '100%',
+    minWidth: 220,
   },
 });

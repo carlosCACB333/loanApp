@@ -1,19 +1,18 @@
 import {Text, Button, TextInput, HelperText} from 'react-native-paper';
 import React, {useContext} from 'react';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {authStackParams} from '../../navigations/Auth';
+import {authStackParams} from '../../navigations/AuthStack';
 import {AuthLayout} from '../../layouts';
 import {Br} from '../../components';
-import {Alert, StyleSheet} from 'react-native';
+import {Alert, View} from 'react-native';
 import {Controller, useForm} from 'react-hook-form';
 import {AuthContext} from '../../context/AuthContext';
-import {ax} from '../../utils/ax';
-import {IUser} from '../../interfaces';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {globals} from '../../styles';
+import {useSignupMutation} from '../../app/services/auth';
 
 type Props = NativeStackScreenProps<authStackParams, 'Signup'>;
 
-interface ISignup {
+export interface ISignup {
   firstName: string;
   lastName: string;
   email: string;
@@ -22,6 +21,7 @@ interface ISignup {
 }
 export const Signup = ({navigation}: Props) => {
   const {setLogin} = useContext(AuthContext);
+  const [signupStart, {isLoading}] = useSignupMutation();
   const {
     control,
     handleSubmit,
@@ -30,23 +30,17 @@ export const Signup = ({navigation}: Props) => {
   } = useForm<ISignup>({mode: 'onChange'});
 
   const onSubmit = (data: ISignup) => {
-    ax.post<{token: string; user: IUser}>('/auth/signup', data)
-      .then(res => {
-        const token = res.data.token;
-        const user = res.data.user;
-        AsyncStorage.setItem('token', token);
-        ax.defaults.headers.common.Authorization = `Bearer ${token}`;
+    signupStart(data)
+      .unwrap()
+      .then(({token, user}) => {
         setLogin(user, token);
       })
       .catch(err => {
-        const e = err.response.data;
+        const e = err?.data;
 
-        if (e.fields) {
-          const email = e.fields.email;
-          const password = e.fields.password;
-          const passwordConfirmation = e.fields.passwordConfirmation;
-          const firstName = e.fields.firstName;
-          const lastName = e.fields.lastName;
+        if (e?.fields) {
+          const {email, password, passwordConfirmation, firstName, lastName} =
+            e.fields;
 
           email && setError('email', {message: email});
           password && setError('password', {message: password});
@@ -55,17 +49,20 @@ export const Signup = ({navigation}: Props) => {
           firstName && setError('firstName', {message: firstName});
           lastName && setError('lastName', {message: lastName});
         } else {
-          Alert.alert('Error', e.message);
+          Alert.alert('Error', e.message || 'Error al registrarse');
         }
       });
   };
 
   return (
     <AuthLayout>
-      <Text style={styles.text}>
-        Registrate para continuar con tu experiencia en nuestra app.
-      </Text>
-      <Br />
+      <View>
+        <Text style={[globals.title, globals.bold]}>Bienvenido !</Text>
+        <Br size={4} />
+        <Text>
+          Registrate para continuar con tu experiencia en nuestra app.
+        </Text>
+      </View>
       <Br />
       <Controller
         control={control}
@@ -85,7 +82,7 @@ export const Signup = ({navigation}: Props) => {
         )}
       />
       <HelperText type="error">{errors?.firstName?.message}</HelperText>
-      <Br />
+
       <Controller
         control={control}
         name="lastName"
@@ -104,7 +101,7 @@ export const Signup = ({navigation}: Props) => {
         )}
       />
       <HelperText type="error">{errors?.lastName?.message}</HelperText>
-      <Br />
+
       <Controller
         control={control}
         name="email"
@@ -128,7 +125,7 @@ export const Signup = ({navigation}: Props) => {
         )}
       />
       <HelperText type="error">{errors?.email?.message}</HelperText>
-      <Br />
+
       <Controller
         control={control}
         name="password"
@@ -152,7 +149,7 @@ export const Signup = ({navigation}: Props) => {
         )}
       />
       <HelperText type="error">{errors?.password?.message}</HelperText>
-      <Br />
+
       <Controller
         control={control}
         name="passwordConfirmation"
@@ -181,26 +178,20 @@ export const Signup = ({navigation}: Props) => {
       <Br />
       <Button
         mode="contained"
+        style={globals.btn}
         onPress={handleSubmit(onSubmit)}
-        disabled={!isValid}>
+        disabled={!isValid || isLoading}>
         Crear cuenta
       </Button>
       <Br />
       <Button
         mode="text"
+        style={globals.btn}
         onPress={() => {
           navigation.replace('Login');
         }}>
-        Login
+        Ya tengo una cuenta !
       </Button>
     </AuthLayout>
   );
 };
-
-const styles = StyleSheet.create({
-  text: {
-    textAlign: 'center',
-    paddingHorizontal: 20,
-    fontSize: 18,
-  },
-});

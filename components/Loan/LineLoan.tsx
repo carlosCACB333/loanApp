@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {Dimensions, ViewStyle} from 'react-native';
+import {Dimensions, ToastAndroid, ViewStyle} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
 import {useTheme} from 'react-native-paper';
 import {useAppSelector} from '../../app/hooks';
@@ -11,7 +11,10 @@ export const LineLoan = () => {
   const {contracts} = useAppSelector(state => state.loan);
   const {user} = useContext(AuthContext);
   const {colors} = useTheme();
-  const {lents, paids} = getLoansAndPaymentsPerMonth(contracts, user?._id!);
+  const {payables, receivables} = getLoansAndPaymentsPerMonth(
+    contracts,
+    user?._id!,
+  );
 
   const chartStyle: Partial<ViewStyle> = {
     alignSelf: 'center',
@@ -38,15 +41,15 @@ export const LineLoan = () => {
           ],
           datasets: [
             {
-              data: lents,
+              data: receivables,
               color: () => colors.primary,
             },
             {
-              data: paids,
+              data: payables,
               color: () => colors.secondary,
             },
           ],
-          legend: ['Mis prestamos', 'Mis pagos'],
+          legend: ['Por cobrar', 'Por pagar'],
         }}
         width={screenWidth}
         height={300}
@@ -65,6 +68,9 @@ export const LineLoan = () => {
         withOuterLines={false}
         bezier
         style={chartStyle}
+        onDataPointClick={({value}) =>
+          ToastAndroid.show('S/' + value, ToastAndroid.SHORT)
+        }
       />
     </>
   );

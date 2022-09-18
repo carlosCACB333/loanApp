@@ -7,6 +7,7 @@ import {Controller, useForm} from 'react-hook-form';
 import {AuthContext} from '../../context/AuthContext';
 import {ProfileScreenProps} from '../../navigations/ProfileStack';
 import {useUpdateProfileMutation} from '../../app/services/auth';
+import {globals} from '../../styles';
 
 interface IUpdateProfile {
   firstName: string;
@@ -17,7 +18,7 @@ interface IUpdateProfile {
 export const UpdateProfile = ({
   navigation,
 }: ProfileScreenProps<'UpdateProfile'>) => {
-  const {setUser, user} = useContext(AuthContext);
+  const {user, setLogin} = useContext(AuthContext);
   const [updateProfile, {isLoading}] = useUpdateProfileMutation();
   const {
     handleSubmit,
@@ -37,8 +38,8 @@ export const UpdateProfile = ({
   const onSubmit = (data: IUpdateProfile) => {
     updateProfile(data)
       .unwrap()
-      .then(u => {
-        setUser(u);
+      .then(({token, user}) => {
+        setLogin(user, token);
         ToastAndroid.show(
           'Datos actualizados correctamente',
           ToastAndroid.LONG,
@@ -78,7 +79,6 @@ export const UpdateProfile = ({
         )}
       />
       <HelperText type="error">{errors?.firstName?.message}</HelperText>
-      <Br />
       <Controller
         control={control}
         name="lastName"
@@ -94,7 +94,7 @@ export const UpdateProfile = ({
         )}
       />
       <HelperText type="error">{errors?.lastName?.message}</HelperText>
-      <Br />
+
       <Controller
         control={control}
         name="email"
@@ -117,7 +117,7 @@ export const UpdateProfile = ({
         )}
       />
       <HelperText type="error">{errors?.email?.message}</HelperText>
-      <Br />
+
       <Controller
         control={control}
         name="photo"
@@ -138,6 +138,7 @@ export const UpdateProfile = ({
       <Br />
       <Button
         mode="contained"
+        style={globals.btn}
         onPress={handleSubmit(onSubmit)}
         disabled={!isValid || isLoading}>
         Actualizar datos

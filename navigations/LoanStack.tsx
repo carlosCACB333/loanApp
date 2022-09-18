@@ -37,6 +37,7 @@ export const LoanStack = () => {
         contentStyle: {
           paddingHorizontal: 12,
         },
+        navigationBarHidden: true,
       }}>
       <Stack.Screen
         name="Loan"

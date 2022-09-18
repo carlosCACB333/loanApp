@@ -3,6 +3,7 @@ import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import {consts} from '../../consts';
 import {IUser} from '../../interfaces';
 import {IChangePw} from '../../screens/auth';
+import {ISignup} from '../../screens/auth/Signup';
 
 export const authApi = createApi({
   reducerPath: 'authApiReducer',
@@ -17,7 +18,36 @@ export const authApi = createApi({
     },
   }),
   endpoints: builder => ({
-    updateProfile: builder.mutation<IUser, Partial<IUser>>({
+    login: builder.mutation<
+      {user: IUser; token: string},
+      {email: string; password: string}
+    >({
+      query: body => ({
+        url: '/login',
+        method: 'POST',
+        body,
+      }),
+    }),
+
+    signup: builder.mutation<{user: IUser; token: string}, ISignup>({
+      query: body => ({
+        url: '/signup',
+        method: 'POST',
+        body,
+      }),
+    }),
+
+    checkToken: builder.query<{user: IUser; token: string}, void>({
+      query: () => ({
+        url: '/check',
+        method: 'GET',
+      }),
+    }),
+
+    updateProfile: builder.mutation<
+      {user: IUser; token: string},
+      Partial<IUser>
+    >({
       query: data => ({
         url: '/update-profile',
         method: 'PUT',
@@ -35,4 +65,10 @@ export const authApi = createApi({
   }),
 });
 
-export const {useUpdateProfileMutation, useChangePasswordMutation} = authApi;
+export const {
+  useCheckTokenQuery,
+  useUpdateProfileMutation,
+  useChangePasswordMutation,
+  useLoginMutation,
+  useSignupMutation,
+} = authApi;

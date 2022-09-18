@@ -17,7 +17,7 @@ const colors = {
 
 const PaperDarkTheme = {
   ...MD3DarkTheme,
-  roundness: 1,
+  roundness: 8,
   dark: true,
   colors: {
     ...MD3DarkTheme.colors,

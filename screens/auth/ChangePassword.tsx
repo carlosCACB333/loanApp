@@ -1,6 +1,5 @@
 import {Button, TextInput, HelperText} from 'react-native-paper';
 import React, {useContext} from 'react';
-
 import {AuthLayout} from '../../layouts';
 import {Br} from '../../components';
 import {Alert, ToastAndroid} from 'react-native';
@@ -9,6 +8,7 @@ import {AuthContext} from '../../context/AuthContext';
 import {ProfileScreenProps} from '../../navigations/ProfileStack';
 import {useChangePasswordMutation} from '../../app/services/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {globals} from '../../styles/globals';
 
 export interface IChangePw {
   oldPassword: string;
@@ -81,7 +81,7 @@ export const ChangePassword = ({
         )}
       />
       <HelperText type="error">{errors?.oldPassword?.message}</HelperText>
-      <Br />
+
       <Controller
         control={control}
         name="newPassword"
@@ -105,7 +105,7 @@ export const ChangePassword = ({
         )}
       />
       <HelperText type="error">{errors?.newPassword?.message}</HelperText>
-      <Br />
+
       <Controller
         control={control}
         name="passwordConfirmation"
@@ -134,6 +134,7 @@ export const ChangePassword = ({
       <Br />
       <Button
         mode="contained"
+        style={globals.btn}
         onPress={handleSubmit(onSubmit)}
         disabled={!isValid || isLoading}>
         Actualizar contraseña

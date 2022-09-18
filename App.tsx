@@ -1,17 +1,16 @@
 import {NavigationContainer} from '@react-navigation/native';
-import React, {useContext, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {StatusBar} from 'react-native';
 import {useTheme} from 'react-native-paper';
-import {AuthContext} from './context/AuthContext';
-import {Auth} from './navigations/Auth';
-import {Home} from './navigations/Home';
+import {AuthProvider} from './context/AuthContext';
+import {AuthStack} from './navigations/AuthStack';
+import {HomeTab} from './navigations/HomeTab';
 import {Provider} from 'react-redux';
 import {store} from './app/store';
 import SplashScreen from 'react-native-splash-screen';
 
 const App = () => {
   const theme = useTheme();
-  const {token} = useContext(AuthContext);
 
   useEffect(() => {
     SplashScreen.hide();
@@ -21,7 +20,9 @@ const App = () => {
     <Provider store={store}>
       <NavigationContainer theme={theme}>
         <StatusBar backgroundColor={theme.colors.background} />
-        {token ? <Home /> : <Auth />}
+        <AuthProvider>
+          {isAuth => (isAuth ? <HomeTab /> : <AuthStack />)}
+        </AuthProvider>
       </NavigationContainer>
     </Provider>
   );

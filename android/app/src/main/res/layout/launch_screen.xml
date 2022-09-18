@@ -7,8 +7,8 @@
     android:orientation="vertical">
 
     <FrameLayout
-        android:layout_width="180dp"
-        android:layout_height="180dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="center"
         android:background="@mipmap/ic_launcher">
 

@@ -1,31 +1,19 @@
-import React, {
-  createContext,
-  FC,
-  PropsWithChildren,
-  useEffect,
-  useReducer,
-} from 'react';
+import React, {createContext, useEffect, useReducer} from 'react';
 import {IUser} from '../interfaces';
-
-import {ax} from '../utils/ax';
 import {AuthReducer} from './AuthReducer';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Loading} from '../components/Loading';
+import {useCheckTokenQuery} from '../app/services/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface AuthContextProps {
   user?: IUser;
-  token?: string;
   checking: boolean;
   setLogin: (user: IUser, token: string) => void;
   setLogout: () => void;
-  setChecking: () => void;
-  deleteChecking: () => void;
-  setUser: (user: IUser) => void;
 }
 
 export interface AuthState {
   user?: IUser;
-  token?: string;
   checking: boolean;
 }
 
@@ -37,51 +25,39 @@ export const AuthContext = createContext<AuthContextProps>(
   {} as AuthContextProps,
 );
 
-export const AuthProvider: FC<PropsWithChildren> = ({children}) => {
+interface Props {
+  children: (isAuth: boolean) => React.ReactNode;
+}
+
+export const AuthProvider = ({children}: Props) => {
   const [state, dispatch] = useReducer(AuthReducer, Auth_INITIAL_STATE);
 
+  const {data, isError} = useCheckTokenQuery(undefined, {
+    refetchOnFocus: true,
+  });
+
   useEffect(() => {
-    const verifyToken = async () => {
-      const token = await AsyncStorage.getItem('token');
-      if (token) {
-        ax.defaults.headers.common.Authorization = `Bearer ${token}`;
+    if (!data) return;
+    setLogin(data.user, data.token);
+  }, [data]);
 
-        try {
-          const {data} = await ax.get<{token: string; user: IUser}>(
-            '/auth/check',
-          );
-          const user = data.user;
-          dispatch({type: 'setLogin', payload: {user, token}});
-        } catch (error) {
-          console.log(error);
-          dispatch({type: 'deleteCheking'});
-        }
-      } else {
-        dispatch({type: 'deleteCheking'});
-      }
-    };
-
-    verifyToken();
-  }, []);
-
-  const setChecking = () => {
-    dispatch({type: 'setCheking'});
-  };
-
-  const deleteChecking = () => {
-    dispatch({type: 'deleteCheking'});
-  };
+  useEffect(() => {
+    if (!isError) return;
+    toggleChecking(false);
+  }, [isError]);
 
   const setLogin = (user: IUser, token: string) => {
-    dispatch({type: 'setLogin', payload: {user, token}});
+    AsyncStorage.setItem('token', token);
+    dispatch({type: 'setLogin', payload: user});
   };
 
   const setLogout = () => {
+    AsyncStorage.removeItem('token');
     dispatch({type: 'logout'});
   };
 
-  const setUser = (user: IUser) => {
-    dispatch({type: 'setUser', payload: user});
+  const toggleChecking = (checking: boolean) => {
+    dispatch({type: 'toggleChecking', payload: checking});
   };
 
   if (state.checking) {
@@ -94,13 +70,10 @@ export const AuthProvider: FC<PropsWithChildren> = ({children}) => {
     <AuthContext.Provider
       value={{
         ...state,
-        setChecking,
-        deleteChecking,
         setLogin,
         setLogout,
-        setUser,
       }}>
-      {children}
+      {children(state.user ? true : false)}
     </AuthContext.Provider>
   );
 };

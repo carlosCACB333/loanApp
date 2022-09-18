@@ -1,15 +1,15 @@
-import {Alert, StyleSheet, Text} from 'react-native';
-import React, {useContext} from 'react';
+import {Alert, Text, View} from 'react-native';
+import React, {useContext, useEffect} from 'react';
 import {Button, HelperText, TextInput} from 'react-native-paper';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {authStackParams} from '../../navigations/Auth';
+import {authStackParams} from '../../navigations/AuthStack';
 import {AuthLayout} from '../../layouts';
 import {Br} from '../../components';
 import {useForm, Controller} from 'react-hook-form';
-import {ax} from '../../utils/ax';
-import {IUser} from '../../interfaces';
+import {IFieldError} from '../../interfaces';
 import {AuthContext} from '../../context/AuthContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {globals} from '../../styles';
+import {useLoginMutation} from '../../app/services/auth';
 
 type Props = NativeStackScreenProps<authStackParams, 'Login'>;
 
@@ -27,39 +27,37 @@ export const Login = ({navigation}: Props) => {
     formState: {errors, isValid},
   } = useForm<ILogin>({mode: 'onChange'});
 
-  const onSubmit = (data: ILogin) => {
-    ax.post<{token: string; user: IUser}>('/auth/login', data)
-      .then(res => {
-        const token = res.data.token;
-        const user = res.data.user;
+  const [loginStart, {data, error, isLoading}] = useLoginMutation();
 
-        AsyncStorage.setItem('token', token);
-        ax.defaults.headers.common.Authorization = `Bearer ${token}`;
-        setLogin(user, token);
-      })
-      .catch(err => {
-        const e = err.response.data;
-        if (e?.fields) {
-          const email = e.fields.email;
-          const password = e.fields.password;
-          if (email) {
-            setError('email', {message: email});
-          }
-          if (password) {
-            setError('password', {message: password});
-          }
-        } else {
-          Alert.alert('Error', e?.message || 'Se ha producido un error');
-        }
-      });
-  };
+  useEffect(() => {
+    const e = (error as any)?.data;
+    if (!e) return;
+    const {fields, message} = e as {fields?: IFieldError; message?: string};
+
+    if (!fields) {
+      return Alert.alert('Error', message || 'Error al iniciar sesión');
+    }
+
+    const {email, password} = fields;
+    email && setError('email', {message: email});
+    password && setError('password', {message: password});
+  }, [error]);
+
+  useEffect(() => {
+    if (!data) return;
+    const {token, user} = data;
+    setLogin(user, token);
+  }, [data]);
 
   return (
     <AuthLayout>
-      <Text style={styles.text}>
-        Inicia sesión para continuar con tu experiencia en nuestra app.
-      </Text>
-      <Br />
+      <View>
+        <Text style={[globals.title, globals.bold]}>Bienvenido !</Text>
+        <Br size={4} />
+        <Text>
+          Inicia sesión para continuar con tu experiencia en nuestra app.
+        </Text>
+      </View>
       <Br />
       <Controller
         control={control}
@@ -83,8 +81,8 @@ export const Login = ({navigation}: Props) => {
           />
         )}
       />
-      <HelperText type="error">{errors?.email?.message}</HelperText>
-      <Br />
+      <HelperText type="error">{errors?.email?.message || ''}</HelperText>
+
       <Controller
         control={control}
         name="password"
@@ -110,22 +108,19 @@ export const Login = ({navigation}: Props) => {
       <HelperText type="error">{errors?.password?.message}</HelperText>
       <Br />
       <Button
+        style={globals.btn}
         mode="contained"
-        onPress={handleSubmit(onSubmit)}
-        disabled={!isValid}>
-        Login
+        onPress={handleSubmit(loginStart)}
+        disabled={!isValid || isLoading}>
+        Iniciar sesión
       </Button>
-      <Button mode="text" onPress={() => navigation.replace('Signup')}>
-        Registrarse
+      <Br />
+      <Button
+        mode="text"
+        style={globals.btn}
+        onPress={() => navigation.replace('Signup')}>
+        ¿No tienes cuenta? Registrate
       </Button>
     </AuthLayout>
   );
 };
-
-const styles = StyleSheet.create({
-  text: {
-    textAlign: 'center',
-    paddingHorizontal: 20,
-    fontSize: 18,
-  },
-});
