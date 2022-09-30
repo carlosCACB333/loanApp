@@ -5,7 +5,21 @@ import {useTheme} from 'react-native-paper';
 import {useAppSelector} from '../../app/hooks';
 import {getLoansAndPaymentsPerMonth} from '../../helpers/getStats';
 import {AuthContext} from '../../context/AuthContext';
-
+import {currency} from '../../utils/formats';
+const MONTHS = [
+  'Ene',
+  'Feb',
+  'Mar',
+  'Abr',
+  'May',
+  'Jun',
+  'Jul',
+  'Ago',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dic',
+];
 const screenWidth = Dimensions.get('window').width - 16;
 export const LineLoan = () => {
   const {contracts} = useAppSelector(state => state.loan);
@@ -25,20 +39,7 @@ export const LineLoan = () => {
     <>
       <LineChart
         data={{
-          labels: [
-            'Ene',
-            'Feb',
-            'Mar',
-            'Abr',
-            'May',
-            'Jun',
-            'Jul',
-            'Ago',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dic',
-          ],
+          labels: MONTHS,
           datasets: [
             {
               data: receivables,
@@ -71,6 +72,9 @@ export const LineLoan = () => {
         onDataPointClick={({value}) =>
           ToastAndroid.show('S/' + value, ToastAndroid.SHORT)
         }
+        formatYLabel={value => currency(Number(value))}
+        yLabelsOffset={-2}
+        xLabelsOffset={-5}
       />
     </>
   );

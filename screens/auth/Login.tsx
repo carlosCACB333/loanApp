@@ -30,6 +30,8 @@ export const Login = ({navigation}: Props) => {
   const [loginStart, {data, error, isLoading}] = useLoginMutation();
 
   useEffect(() => {
+    console.log(error);
+
     const e = (error as any)?.data;
     if (!e) return;
     const {fields, message} = e as {fields?: IFieldError; message?: string};

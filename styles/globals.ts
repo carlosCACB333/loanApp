@@ -10,6 +10,9 @@ export const globals = StyleSheet.create({
     marginTop: 8,
     marginBottom: 8,
   },
+  mx: {
+    marginHorizontal: 8,
+  },
   p2: {
     padding: 12,
   },
@@ -80,9 +83,11 @@ export const globals = StyleSheet.create({
   tooltip: {
     fontSize: 12,
     color: 'white',
-    backgroundColor: 'black',
     width: 150,
-    padding: 8,
-    borderRadius: 4,
+    paddingHorizontal: 12,
+  },
+
+  label: {
+    fontSize: 12,
   },
 });

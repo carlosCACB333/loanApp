@@ -68,7 +68,10 @@ export const Profile = ({navigation}: ProfileScreenProps<'ProfileHome'>) => {
       </View>
       <Br />
       <Br />
-      <Button textColor={theme.colors.error} onPress={onLogout}>
+      <Button
+        style={globals.btn}
+        textColor={theme.colors.error}
+        onPress={onLogout}>
         Cerrar Sesión
       </Button>
     </HomeLayout>

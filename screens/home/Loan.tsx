@@ -47,7 +47,7 @@ export const Loan = () => {
               progressBackgroundColor={colors.background}
             />
           }
-          ItemSeparatorComponent={() => <Br />}
+          ItemSeparatorComponent={() => <Br size={2} />}
           renderItem={({item}) => (
             <CardContract
               contract={item}

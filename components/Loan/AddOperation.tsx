@@ -83,7 +83,12 @@ export const AddOperation = ({id}: Props) => {
         </>
       )}>
       <Text style={globals.title}>Agregar nueva operación</Text>
-      <Br />
+      <Br size={2} />
+      <Text style={globals.label}>
+        Una operación es un movimiento de dinero. Esto puede ser el pago que te
+        hizo un contacto o el dinero que le vas a dar como préstamo.
+      </Text>
+
       <Br />
       <Controller
         control={control}
@@ -125,7 +130,6 @@ export const AddOperation = ({id}: Props) => {
                 backgroundColor: theme.colors.background,
                 borderRadius: 8,
               }}
-              mode="dropdown"
               style={{
                 color: errors.type ? theme.colors.error : theme.colors.text,
               }}>

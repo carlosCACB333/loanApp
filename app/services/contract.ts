@@ -11,7 +11,7 @@ export const contractApi = createApi({
   refetchOnMountOrArgChange: true, //cuando se monta o cambia el argumento
 
   baseQuery: fetchBaseQuery({
-    baseUrl: consts.apiUrl + '/contract',
+    baseUrl: consts.apiUrl + '/contracts',
     prepareHeaders: async headers => {
       headers.set('api_key', 'uAG5L.T5zpxN7Qg');
       headers.set(

@@ -13,7 +13,6 @@ export const PieLoan = () => {
   const {user} = useContext(AuthContext);
   const stats = getContractStats(contracts, user?._id || '');
   const pieStyle: Partial<ViewStyle> = {
-    // marginVertical: 16,
     borderRadius: 20,
     backgroundColor: colors.card,
     alignSelf: 'center',

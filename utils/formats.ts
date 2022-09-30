@@ -7,3 +7,10 @@ export const dateFormat = (date: string) =>
     minute: 'numeric',
     hour12: true,
   });
+
+export const currency = function (num: number) {
+  return num.toLocaleString('es-PE', {
+    style: 'currency',
+    currency: 'PEN',
+  });
+};

@@ -6,7 +6,7 @@ import {IContract, IUser} from '../../interfaces';
 import {LoanNavigatorProps} from '../../navigations/LoanStack';
 import {globals} from '../../styles';
 import {getOperationsStats} from '../../helpers/getStats';
-import {dateFormat} from '../../utils/dateFormat';
+import {currency, dateFormat} from '../../utils/formats';
 
 interface Props {
   contract: IContract;
@@ -69,7 +69,7 @@ export const CardContract = ({isLender, contract}: Props) => {
             <Chip
               mode="outlined"
               style={{borderColor: statusColor, ...styles.trans}}>
-              {status} S/{total < 0 ? total * -1 : total}
+              {status} {currency(total < 0 ? total * -1 : total)}
             </Chip>
             <Paragraph>{dateFormat(contract.createdAt)}</Paragraph>
           </View>
