@@ -1,4 +1,5 @@
-package com.loanapp.newarchitecture.components;
+
+package com.carloscb.loan.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

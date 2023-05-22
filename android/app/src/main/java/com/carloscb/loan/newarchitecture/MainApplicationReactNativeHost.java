@@ -1,4 +1,5 @@
-package com.loanapp.newarchitecture;
+
+package com.carloscb.loan.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +20,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.loanapp.BuildConfig;
-import com.loanapp.newarchitecture.components.MainComponentsRegistry;
-import com.loanapp.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.carloscb.loan.BuildConfig;
+import com.carloscb.loan.newarchitecture.components.MainComponentsRegistry;
+import com.carloscb.loan.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

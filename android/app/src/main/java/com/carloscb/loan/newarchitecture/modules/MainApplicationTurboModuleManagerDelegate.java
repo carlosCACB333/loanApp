@@ -1,4 +1,5 @@
-package com.loanapp.newarchitecture.modules;
+
+package com.carloscb.loan.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

@@ -1,4 +1,4 @@
-package com.loanapp;
+package com.carloscb.loan;
 
 import android.os.Bundle;
 import com.facebook.react.ReactActivity;
